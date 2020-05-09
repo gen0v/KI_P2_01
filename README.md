@@ -2,7 +2,7 @@
 
 ### Problem definition of the 8 queens problem
 Class for encoding the 8 Queens problem. It should encode the members:
-* initial stat
+* initial state
 * actions
 * transition model
 * heuristic
