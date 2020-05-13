@@ -4,13 +4,14 @@ from collections import Counter
 # State defines the board as position in the string is the column
 # and the value on the position is the row
 class Board:
-    def __init__(self, state="75316427", transition_model=False, move=((0,0),(1,1)) ):
-        self.state = list(state)
+    def __init__(self, state=list("01234567"), transition_model=False, move=((0,0),(1,1)) ):
+        # self.state = list(state)
+        self.state = state
         if transition_model:
             self.moveQueen(move[0],move[1])
         self.threats = self.calculateAllThreats(self.state)
-        print(self)
         self.heuristicFunction()
+        print(self)
 
     def calculateAllThreats(self, state) -> float:
         hor_threat, cross_threat = 0, 0
@@ -95,4 +96,4 @@ class Board:
             
 
 
-board = Board("46152030",transition_model=True,move=((7,0),(7,7)))
+# board = Board("46152030",transition_model=True,move=((7,0),(7,7)))
