@@ -98,6 +98,7 @@ class Board:
                 res += "[Q]" if int(col) == row else "[ ]"
             res += "\n"
         res += "Number of threats: " + str(self.threats)
+        res += " | State : " + str(self.state)
         return res
 
     def heuristicRepr(self):
