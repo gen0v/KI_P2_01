@@ -4,18 +4,16 @@ from collections import Counter
 # State defines the board as position in the string is the column
 # and the value on the position is the row
 class Board:
-    def __init__(self, state=list("01234567"), transition_model=False, move=((0,0),(1,1)) ):
-        # self.state = list(state)
-        self.state = state
+    def __init__(self, state="01234567", transition_model=False, move=((0,0),(1,1)) ):
+        self.state = list(state)
+        # self.state = state
         if transition_model:
             self.moveQueen(move[0],move[1])
-        self.threats = self.calculateAllThreats(self.state)
-        self.heuristicFunction()
-        print(self)
 
-    def calculateAllThreats(self, state) -> float:
+    def calculateAllThreats(state) -> float:
         hor_threat, cross_threat = 0, 0
         # Horizontal threats
+        state = state.get()
         z = state.copy()
         res = Counter(z)
         for n in res:
@@ -36,7 +34,7 @@ class Board:
                 down_list.insert(0,str(a-counter))
                 up_list.insert(0,str(a+counter))
                 counter += 1
-            cross_threat += self.matchLists(down_list, up_list, state)
+            cross_threat += Board.matchLists(down_list, up_list, state)
             # print(up_list)
             # print(down_list)
         # print(cross_threat)
@@ -44,7 +42,7 @@ class Board:
 
     # function matches lst1 and lst2 with the state list
     # and return the # of matches / 2 because every match is counted two times
-    def matchLists(self, lst1, lst2, state) -> float:
+    def matchLists(lst1, lst2, state) -> float:
         matches = 0
         for i in range(0,len(state),1):
             if state[i] == lst1[i] or state[i] == lst2[i]:
@@ -52,7 +50,6 @@ class Board:
         return matches / 2
 
 
-    # TODO
     # tuple position should be like (col,row)
     def moveQueen(self, pos_from: tuple, pos_to: tuple):
         if int(self.state[pos_from[0]]) == pos_from[1] and pos_to[0] == pos_from[0]:
@@ -64,6 +61,7 @@ class Board:
 
     def __repr__(self):
         res = ""
+        self.threats = self.calculateAllThreats()
         for row in reversed(range(len(self.state))):
             for col in self.state:
                 res += "[Q]" if int(col) == row else "[ ]"
@@ -71,7 +69,7 @@ class Board:
         res += "Number of threats: " + str(self.threats)
         return res
 
-    def heuristicFunction(self):
+    def heuristicRepr(self):
         print("HEURISTIC")
         h_lst = []
         for row in range(0,len(self.state)):
@@ -91,9 +89,9 @@ class Board:
             rep += "\n"
         print(rep)
                     
-
+    def get(self):
+        return self.state
         
-            
 
 
 # board = Board("46152030",transition_model=True,move=((7,0),(7,7)))
