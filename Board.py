@@ -4,11 +4,11 @@ from collections import Counter
 # State defines the board as position in the string is the column
 # and the value on the position is the row
 class Board:
-    def __init__(self, state="01234567", transition_model=False, move=((0,0),(1,1)) ):
+    def __init__(self, state="01234567", transition_model=False, move=(0,1) ):
         self.state = list(state)
         # self.state = state
         if transition_model:
-            self.moveQueen(move[0],move[1])
+            self.move(move)
 
     def calculateAllThreats(state) -> float:
         hor_threat, cross_threat = 0, 0
@@ -40,6 +40,35 @@ class Board:
         # print(cross_threat)
         return hor_threat + cross_threat
 
+    def calculateAllNonThreats(state) -> float:
+        hor_threat, cross_threat = 0, 0
+        # Horizontal threats
+        state = state.get()
+        z = state.copy()
+        res = Counter(z)
+        for n in res:
+            # print(str(res[n]) + " --> " + str((res[n] * (res[n] - 1)) / 2) )
+            hor_threat += ((res[n] * (res[n] - 1)) / 2)
+        # print(hor_threat)
+        # Cross threats
+        for n in range(0,len(state)):
+            down_list, up_list = ["X"],["X"]
+            counter = 1
+            a = int(state[n])
+            for right in range(n,len(state)):
+                down_list.append(str(a-counter))
+                up_list.append(str(a + counter))
+                counter += 1
+            counter = 1
+            for left in range(0,n):
+                down_list.insert(0,str(a-counter))
+                up_list.insert(0,str(a+counter))
+                counter += 1
+            cross_threat += Board.matchLists(down_list, up_list, state)
+            # print(up_list)
+            # print(down_list)
+        # print(cross_threat)
+        return 28 - (hor_threat + cross_threat)
     # function matches lst1 and lst2 with the state list
     # and return the # of matches / 2 because every match is counted two times
     def matchLists(lst1, lst2, state) -> float:
@@ -49,6 +78,8 @@ class Board:
                 matches += 1
         return matches / 2
 
+    def move(self, pos):
+        self.state[pos[0]] = str(pos[1])
 
     # tuple position should be like (col,row)
     def moveQueen(self, pos_from: tuple, pos_to: tuple):
@@ -95,3 +126,4 @@ class Board:
 
 
 # board = Board("46152030",transition_model=True,move=((7,0),(7,7)))
+# print(Board("13637441"))
