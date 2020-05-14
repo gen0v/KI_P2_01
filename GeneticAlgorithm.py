@@ -31,6 +31,7 @@ class GeneticAlgorithm:
         n = len(x.get())
         c = random.randint(0,n-1)
         return Board(x.get()[0:c] + y.get()[c:n])
+        
 
 
     def mutate(self, child: Board) -> Board:
