@@ -1,5 +1,6 @@
 import random
 from Board import Board
+import BoardUtil
 from collections import Counter
 import numpy
 
@@ -111,7 +112,7 @@ for p in range(population_count):
     pop.append(Board(r))
 
 g = GeneticAlgorithm()
-print(g.evolution(pop,Board.calculateAllNonThreats))
+print(g.evolution(pop,BoardUtil.calculateAllNonThreats))
 # Test mutate
 # print(g.mutate(b))
 
