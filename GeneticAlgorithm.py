@@ -7,6 +7,7 @@ class GeneticAlgorithm:
     def __init__(self):
         self.fitness_all = 0
         self.probability = []
+        self.fitness = []
         self.pop = []
 
     def random_selection(self, population, fitness_fn) -> Board:
@@ -30,7 +31,7 @@ class GeneticAlgorithm:
     def reproduce(self, x:Board, y:Board) -> Board:
         n = len(x.get())
         c = random.randint(0,n-1)
-        return Board(x.get()[0:c] + y.get()[c:n])
+        return (Board(x.get()[0:c] + y.get()[c:n]), Board(y.get()[0:c] + x.get()[c:n]))
         
 
 
@@ -41,13 +42,13 @@ class GeneticAlgorithm:
 
     def evolution(self, population: Board, fitness_fn):
         found = False
-        count,limit = 0,100 
+        count,limit,count_cross = 0,100,0
         while not found and count < limit:
             new_population = []
-            
             self.calc_fitness(population,fitness_fn)
             
             best_fitness = 0
+            count_cross = 1
 
             for i in range(0,len(population)):
 
@@ -61,20 +62,25 @@ class GeneticAlgorithm:
                 
                 # iterate through population
                 # i is of type board
+                if count_cross % 2 == 0:
+                    x = self.random_selection(population,fitness_fn)
+                    y = self.random_selection(population,fitness_fn)
+                    # reproduce
+                    childs = self.reproduce(x,y)
+                    
 
+                    # random probability for mutation
+                    # print(child)
+                    if(random.randint(0,100) <= 30):
+                        child1 = self.mutate(childs[0])
+                        child2 = self.mutate(childs[1])
+                        childs = (child1, child2)
+                    new_population.append(childs[0])
+                    new_population.append(childs[1])
 
-                x = self.random_selection(population,fitness_fn)
-                y = self.random_selection(population,fitness_fn)
-                # reproduce
-                child = self.reproduce(x,y)
-                
-
-                # random probability for mutation
-                # print(child)
-                if(random.randint(0,100) <= 30):
-                    child = self.mutate(child)
-                new_population.append(child)
+                count_cross += 1
             population = new_population
+            print("Population: " + str(len(population)))
             # not very elegant
             # best_fitness = 0
             # for a in population:
@@ -90,12 +96,12 @@ class GeneticAlgorithm:
                         
                         
                 
-b1 = Board("75316401")
-b2 = Board("76543210")
-b3 = Board("40731624")
-pop = [b1,b2,b3]
-population_count = 500
-# pop = []
+# b1 = Board("75316401")
+# b2 = Board("76543210")
+# b3 = Board("40731624")
+# pop = [b1,b2,b3]
+population_count = 1000
+pop = []
 for p in range(population_count):
     r = ""
     for n in range(8):
