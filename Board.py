@@ -47,7 +47,7 @@ class Board:
                 temp_state = self.state.copy()
                 temp_state[col] = str(row)
                 # print(temp_state)
-                h_threat = self.calculateAllThreats(temp_state)
+                h_threat = BoardUtil.calculateAllThreats(temp_state)
                 temp_lst.append(h_threat)
             h_lst.insert(0,temp_lst)
         
