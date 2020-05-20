@@ -1,3 +1,4 @@
+import BoardUtil
 # This is a class for encoding the 8 Queens problem
 
 
@@ -5,7 +6,10 @@
 # and the value on the position is the row
 class Board:
     def __init__(self, state="01234567", transition_model=False, move=(0,1) ):
-        self.state = list(state)
+        if type(state) != list:
+            self.state = list(state)
+        else:
+            self.state = state
         # self.state = state
         if transition_model:
             self.move(move)
@@ -25,7 +29,7 @@ class Board:
 
     def __repr__(self):
         res = ""
-        self.threats = self.calculateAllThreats()
+        self.threats = BoardUtil.calculateAllThreats(self.state)
         for row in reversed(range(len(self.state))):
             for col in self.state:
                 res += "[Q]" if int(col) == row else "[ ]"
@@ -56,6 +60,12 @@ class Board:
                     
     def get(self):
         return self.state
+    
+    def __sizeof__(self):
+        return len(self.state)
+    
+    def __len__(self):
+        return len(self.state)
         
 
 
