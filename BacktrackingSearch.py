@@ -1,6 +1,8 @@
 from Board import Board
 import BoardUtil
 import copy
+import timeit
+
 
 class BacktrackingSearch:
 
@@ -19,6 +21,7 @@ class BacktrackingSearch:
             if int(csp[i]) == -1: return i
 
 
+    # return all possible usable values
     def order_domain_values(self, var,assignment,csp):
         domain = []
         for i in range(0,len(csp)):
@@ -26,7 +29,6 @@ class BacktrackingSearch:
         return self.complement_intersection(assignment, domain)
 
     def interference(self, csp, var, value):
-
         cspc = copy.deepcopy(csp)
         # print(csp)
         cspc.move((var,value))
@@ -58,15 +60,25 @@ class BacktrackingSearch:
 
         var = self.select_unassigned_variable(csp.get())
         # print("Unassigned var is : " + str(var))
+        # return all possible values to use where to put the queen
         for value in self.order_domain_values(var,assignment,csp.get()):
             # print("Value is : " + str(value))
             # if value is consitent with assignment
             if value not in assignment:
-
                 # assignment[var] = value
-                assignment.append(value)
                 # print(assignment)
+                # print(value)
 
+                if len(assignment) > 2 and abs(assignment[-1]-value) < 2:
+                    # print("Len assignment: " + str(assignment))
+                    # print("abs(assignment[-1]-value : " + str(abs(assignment[-1]-value)))
+                    # print("assignment [-1]" + str(assignment[-1]))
+                    # print("Value : " + str(value))
+                    continue
+                
+                assignment.append(value)
+
+                # see if there is a problem
                 interferences = self.interference(csp,var,value)
                 # print(interferences)
                 if interferences == False:
@@ -85,16 +97,26 @@ class BacktrackingSearch:
         return False
 
 
-
-b1 = Board(["-1","-1","-1","-1","-1","-1","-1","-1"])
-b2 = Board("76543210")
-b3 = Board("40731624")
-
+b8 = Board(["-1","-1","-1","-1","-1","-1","-1","-1"])
+b10 = Board(["-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"])
+b12 = Board(["-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"])
 bt = BacktrackingSearch()
+bt.backtrack([],b12)
 
-print(bt.backtrack([],b1))
 
-# print(BoardUtil.calculateAllThreats([5,3,6,0,7,1,4,2]))
-# print(BoardUtil.calculateAllThreats([6, 3, 1, 4, 7, 0, 2, 5]))
-# print(BoardUtil.calculateAllThreats([7, 2, 0, 5, 1, 4, 6, 3]))
-        
+
+
+# Test time
+# b10 = Board(["-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"])
+# code_to_test = """
+# from BacktrackingSearch import BacktrackingSearch
+# from Board import Board
+# bt = BacktrackingSearch()
+# b8 = Board(["-1","-1","-1","-1","-1","-1","-1","-1"])
+# b12 = Board(["-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"])
+# bt.backtrack([],b12)
+# """
+
+# elapsed_time = timeit.timeit(code_to_test, number=1)/1
+# print(elapsed_time)
+   
